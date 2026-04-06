@@ -133,7 +133,7 @@ function App() {
           <div>
             <div className="page-header">
               <div>
-                <h1>Roster Overview</h1>
+                <h1>Artists Overview</h1>
                 <p>Aggregated intelligence across {rosterStats.totalArtists} tracked artists</p>
               </div>
               <div style={{
