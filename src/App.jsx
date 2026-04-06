@@ -404,12 +404,12 @@ function App() {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px', marginBottom: '24px' }}>
+            {/* <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px', marginBottom: '24px' }}>
               {filteredArtists.map(a => (
                 <ArtistCard key={a.id} artist={a} isSelected={selectedArtist.id === a.id}
                   onClick={() => setSelectedArtist(a)} />
               ))}
-            </div>
+            </div> */}
 
             <ArtistDetail artist={selectedArtist} />
           </div>
