@@ -79,6 +79,7 @@ function App() {
   const [error, setError]               = useState(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const scrollContainerRef = React.useRef(null);
 
   useEffect(() => {
@@ -138,6 +139,7 @@ function App() {
     }
   }, [artists]);
 
+  const filteredArtists = artists.filter(a => a.name.toLowerCase().includes(searchQuery.toLowerCase()));
   const allAwards = artists.flatMap(a => a.awards.map(aw => ({ ...aw, artist: a }))).slice(0, 8);
   const allTours = artists
     .flatMap(a => a.tours.filter(t => t.status === 'announced').map(t => ({ ...t, artist: a })))
@@ -182,14 +184,32 @@ function App() {
         </nav>
 
         <div style={{ padding: '0 12px', marginBottom: '8px' }}>
+          <div style={{ padding: '0 12px', marginBottom: '10px' }}>
+            <div style={{ position: 'relative' }}>
+              <span style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', fontSize: '12px', color: 'rgba(255,255,255,0.3)', pointerEvents: 'none' }}>🔍</span>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="Search artists…"
+                style={{
+                  width: '100%', boxSizing: 'border-box',
+                  background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: '8px', padding: '7px 10px 7px 30px',
+                  fontSize: '11px', color: '#fff', outline: 'none',
+                }}
+              />
+            </div>
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 12px', marginBottom: '8px' }}>
             <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.92)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               Artists
             </div>
-            <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.3)' }}>by rank</div>
+            <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.3)' }}>{filteredArtists.length} / {artists.length}</div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {artists.map(a => (
+            {filteredArtists.length === 0 && <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', padding: '8px 12px' }}>No artists found</div>}
+            {filteredArtists.map(a => (
               <button key={a.id} onClick={() => { setSelectedArtist(a); setActiveSection('artist'); }} style={{
                 display: 'flex', alignItems: 'center', gap: '10px',
                 background: selectedArtist?.id === a.id && activeSection === 'artist' ? `${a.color}18` : 'none',
@@ -304,7 +324,7 @@ function App() {
                     display: none;
                   }
                 `}</style>
-                {artists.map(a => (
+                {filteredArtists.map(a => (
                   <div key={a.id} style={{ flex: '1 0 auto', minWidth: 'calc(33.333% - 8px)' }}>
                     <ArtistCard artist={a} isSelected={false}
                       onClick={() => { setSelectedArtist(a); setActiveSection('artist'); }} />
@@ -385,7 +405,7 @@ function App() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px', marginBottom: '24px' }}>
-              {artists.map(a => (
+              {filteredArtists.map(a => (
                 <ArtistCard key={a.id} artist={a} isSelected={selectedArtist.id === a.id}
                   onClick={() => setSelectedArtist(a)} />
               ))}
