@@ -77,6 +77,9 @@ function App() {
   const [activeSection, setActiveSection]   = useState('roster');
   const [loading, setLoading]           = useState(true);
   const [error, setError]               = useState(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  const scrollContainerRef = React.useRef(null);
 
   useEffect(() => {
     fetch(API_URL, { method: 'GET', headers: { 'Content-Type': 'application/json' } })
@@ -103,6 +106,37 @@ function App() {
         setLoading(false);
       });
   }, []);
+
+  const checkScrollButtons = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1);
+    }
+  };
+
+  const scroll = (direction) => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = scrollContainerRef.current.clientWidth / 3; // scroll by ~1 card width
+      scrollContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  useEffect(() => {
+    checkScrollButtons();
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', checkScrollButtons);
+      window.addEventListener('resize', checkScrollButtons);
+      return () => {
+        container.removeEventListener('scroll', checkScrollButtons);
+        window.removeEventListener('resize', checkScrollButtons);
+      };
+    }
+  }, [artists]);
 
   const allAwards = artists.flatMap(a => a.awards.map(aw => ({ ...aw, artist: a }))).slice(0, 8);
   const allTours = artists
@@ -224,11 +258,87 @@ function App() {
             </div>
 
             {/* Artist cards */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px', marginBottom: '28px' }}>
-              {artists.map(a => (
-                <ArtistCard key={a.id} artist={a} isSelected={false}
-                  onClick={() => { setSelectedArtist(a); setActiveSection('artist'); }} />
-              ))}
+            <div style={{ position: 'relative', marginBottom: '28px' }}>
+              <button
+                onClick={() => scroll('left')}
+                disabled={!canScrollLeft}
+                style={{
+                  position: 'absolute',
+                  left: '-12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  zIndex: 10,
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  border: 'none',
+                  background: canScrollLeft ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.03)',
+                  color: canScrollLeft ? '#fff' : 'rgba(255,255,255,0.2)',
+                  cursor: canScrollLeft ? 'pointer' : 'not-allowed',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '16px',
+                  transition: 'all 0.2s',
+                  backdropFilter: 'blur(8px)',
+                  boxShadow: canScrollLeft ? '0 4px 12px rgba(0,0,0,0.3)' : 'none',
+                }}
+              >
+                ‹
+              </button>
+              
+              <div 
+                ref={scrollContainerRef}
+                style={{ 
+                  display: 'flex',
+                  gap: '12px',
+                  overflowX: 'auto',
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none',
+                  paddingBottom: '4px',
+                }}
+                onScroll={checkScrollButtons}
+              >
+                <style>{`
+                  div::-webkit-scrollbar {
+                    display: none;
+                  }
+                `}</style>
+                {artists.map(a => (
+                  <div key={a.id} style={{ flex: '1 0 auto', minWidth: 'calc(33.333% - 8px)' }}>
+                    <ArtistCard artist={a} isSelected={false}
+                      onClick={() => { setSelectedArtist(a); setActiveSection('artist'); }} />
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={() => scroll('right')}
+                disabled={!canScrollRight}
+                style={{
+                  position: 'absolute',
+                  right: '-12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  zIndex: 10,
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  border: 'none',
+                  background: canScrollRight ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.03)',
+                  color: canScrollRight ? '#fff' : 'rgba(255,255,255,0.2)',
+                  cursor: canScrollRight ? 'pointer' : 'not-allowed',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '16px',
+                  transition: 'all 0.2s',
+                  backdropFilter: 'blur(8px)',
+                  boxShadow: canScrollRight ? '0 4px 12px rgba(0,0,0,0.3)' : 'none',
+                }}
+              >
+                ›
+              </button>
             </div>
 
             {/* Charts */}
