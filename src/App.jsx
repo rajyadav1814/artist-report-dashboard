@@ -165,7 +165,7 @@ function App() {
       <aside className="sidebar">
         <div style={{ padding: '28px 20px 20px' }}>
           <div style={{ fontSize: '20px', color: '#fff', fontFamily: "'DM Serif Display', serif", lineHeight: 1.2 }}>
-            Artist Report
+            Artist 360° intelligence
           </div>
         </div>
 
@@ -221,14 +221,6 @@ function App() {
           </div>
         </div>
 
-        <div style={{ marginTop: 'auto', padding: '20px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-          <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.2)' }}>
-            Source: {rosterStats.dataSource}
-          </div>
-          <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.15)', marginTop: '2px' }}>
-            Scraped: {rosterStats.scrapedAt}
-          </div>
-        </div>
       </aside>
 
       {/* Main */}
@@ -237,8 +229,8 @@ function App() {
           <div>
             <div className="page-header">
               <div>
-                <h1>Artists Overview</h1>
-                <p>Aggregated intelligence across {rosterStats.totalArtists} tracked artists</p>
+                <h1>Artists 360° intelligence Overview</h1>
+                <p>The Artists 360° Intelligence Overview dashboard highlights {rosterStats.totalArtists} active artists with key metrics like monthly listeners, YouTube views, awards, and tours. It compares artist performance, showcases genre distribution, and tracks streaming milestones. Overall, it provides a clear, data-driven view of audience reach, popularity trends, and music industry impact.</p>
               </div>
               <div style={{
                 fontSize: '11px', padding: '5px 14px', borderRadius: '20px',
@@ -255,6 +247,7 @@ function App() {
               <MetricCard label="YouTube views" value={fmtNum(rosterStats.totalYoutubeViews)} sub="Combined total" />
               <MetricCard label="Awards won" value={String(rosterStats.totalAwardsWon || 0)} sub="Grammy & Latin Grammy" />
               <MetricCard label="Active tours" value={String(rosterStats.activeTours || 0)} sub="Announced events" />
+              <MetricCard label="Last updated" value={rosterStats.scrapedAt || '—'} sub="Data refresh time" />
             </div>
 
             {/* Artist cards */}
@@ -379,22 +372,32 @@ function App() {
           <div>
             <div className="page-header">
               <div>
-                <h1>Artist Detail</h1>
+                <h1>Artist 360° Intelligence Detail</h1>
                 <p>Deep-dive intelligence for {selectedArtist.name}</p>
               </div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px', marginBottom: '24px' }}>
-              {artists.map(a => (
-                <ArtistCard key={a.id} artist={a} isSelected={selectedArtist.id === a.id}
-                  onClick={() => setSelectedArtist(a)} />
-              ))}
             </div>
 
             <ArtistDetail artist={selectedArtist} />
           </div>
         )}
         <ChatBot />
+        <footer style={{
+          marginTop: '40px',
+          paddingTop: '24px',
+          paddingBottom: '24px',
+          borderTop: '1px solid rgba(255,255,255,0.06)',
+          textAlign: 'center',
+        }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+            
+            <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)' }}>
+              info@chromadata.com
+            </div>
+            <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.25)' }}>
+              © 2026 - Chromadata. All rights reserved.
+            </div>
+          </div>
+        </footer>
       </main>
     </div>
   );
