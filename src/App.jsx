@@ -4,6 +4,7 @@ import MetricCard from './components/MetricCard';
 import ArtistCard from './components/ArtistCard';
 import ArtistDetail from './components/ArtistDetail';
 import { ListenersChart, GenreDonut, AlbumStreamsChart } from './components/RosterCharts';
+import ComparisonChart, { ComparisonViewsChart, ComparisonAwardsChart, ComparisonToursChart, ComparisonRankChart } from './components/ComparisonChart';
 import './App.css';
 import ChatBot from './components/ChatBot';
 
@@ -74,6 +75,7 @@ function App() {
   const [artists, setArtists]           = useState([]);
   const [rosterStats, setRosterStats]   = useState({});
   const [selectedArtist, setSelectedArtist] = useState(null);
+  const [comparisonSelection, setComparisonSelection] = useState([]);
   const [activeSection, setActiveSection]   = useState('roster');
   const [loading, setLoading]           = useState(true);
   const [error, setError]               = useState(null);
@@ -100,6 +102,7 @@ function App() {
         setArtists(sorted);
         setRosterStats(computeRosterStats(transformed));
         setSelectedArtist(transformed[0] || null);
+        setComparisonSelection(transformed[0] ? [transformed[0].id] : []);
         setLoading(false);
       })
       .catch(err => {
@@ -146,6 +149,16 @@ function App() {
     .sort((a, b) => new Date(a.date) - new Date(b.date))
     .slice(0, 8);
 
+  const selectedArtistAwards = selectedArtist?.awards.filter(a => a.status === 'won' || a.status === 'honored').length || 0;
+  const selectedArtistTours = selectedArtist?.tours.filter(t => t.status === 'announced').length || 0;
+  const comparisonArtists = artists.filter(a => comparisonSelection.includes(a.id));
+
+  const toggleComparisonArtist = (artistId) => {
+    setComparisonSelection(prev => prev.includes(artistId)
+      ? prev.filter(id => id !== artistId)
+      : [...prev, artistId]);
+  };
+
   if (loading) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#0f0f19', color: 'rgba(255,255,255,0.5)', flexDirection: 'column', gap: '16px' }}>
       <div style={{ width: '40px', height: '40px', border: '3px solid rgba(255,255,255,0.1)', borderTopColor: '#4F8EF7', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
@@ -172,7 +185,11 @@ function App() {
         </div>
 
         <nav style={{ padding: '0 12px', marginBottom: '20px' }}>
-          {[{ id: 'roster', label: '⊞  Artist Overview' }, { id: 'artist', label: '◎  Artist Detail' }].map(s => (
+          {[
+            { id: 'roster', label: '⊞  Overview' },
+            { id: 'comparison', label: '⊟  Comparison' },
+            { id: 'artist', label: '◎  Artist Detail' },
+          ].map(s => (
             <button key={s.id} onClick={() => setActiveSection(s.id)} style={{
               display: 'block', width: '100%', textAlign: 'left',
               background: activeSection === s.id ? 'rgba(255,255,255,0.07)' : 'none',
@@ -385,6 +402,114 @@ function App() {
                 {allTours.map((t, i) => <TourEvent key={i} event={t} artist={t.artist} />)}
               </div>
             </div>
+          </div>
+        )}
+
+        {activeSection === 'comparison' && selectedArtist && (
+          <div>
+            <div className="page-header">
+              <div>
+                <h1>Artist comparison insights</h1>
+                <p>Compare {selectedArtist.name}'s performance against the roster with focused listener trends and selective metrics.</p>
+              </div>
+            </div>
+
+            <div className="grid-2" style={{ marginBottom: '20px' }}>
+              <div className="card">
+                <div className="card-label">Selected artists for comparison</div>
+                <div style={{ maxHeight: '360px', overflowY: 'auto', paddingRight: '4px' }}>
+                  {artists.map(a => (
+                    <label key={a.id} style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      gap: '12px', padding: '10px 12px', borderRadius: '12px', marginBottom: '8px',
+                      background: comparisonSelection.includes(a.id) ? 'rgba(46,196,160,0.1)' : 'rgba(255,255,255,0.03)',
+                      border: comparisonSelection.includes(a.id) ? `1px solid ${a.color}44` : '1px solid rgba(255,255,255,0.06)',
+                      cursor: 'pointer',
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <input
+                          type="checkbox"
+                          checked={comparisonSelection.includes(a.id)}
+                          onChange={() => toggleComparisonArtist(a.id)}
+                          style={{ width: '16px', height: '16px' }}
+                        />
+                        <div>
+                          <div style={{ fontSize: '12px', color: '#fff' }}>{a.name}</div>
+                          <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.45)' }}>{fmtNum(a.monthlyListeners)} monthly listeners</div>
+                        </div>
+                      </div>
+                      <div style={{ fontSize: '10px', color: comparisonSelection.includes(a.id) ? a.color : 'rgba(255,255,255,0.35)' }}>
+                        {a.country}
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="card">
+                <div className="card-label">Monthly listeners comparison</div>
+                {comparisonArtists.length > 0 ? (
+                  <ComparisonChart artists={artists} selectedIds={comparisonSelection} />
+                ) : (
+                  <div style={{ padding: '28px', fontSize: '13px', color: 'rgba(255,255,255,0.45)' }}>
+                    Select one or more artists from the list to show their monthly listener comparison.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="grid-2" style={{ marginBottom: '20px', gap: '20px' }}>
+              <div className="card">
+                <div className="card-label">YouTube views comparison</div>
+                {comparisonArtists.length > 0 ? (
+                  <ComparisonViewsChart artists={artists} selectedIds={comparisonSelection} />
+                ) : (
+                  <div style={{ padding: '28px', fontSize: '13px', color: 'rgba(255,255,255,0.45)' }}>
+                    Select artists to compare YouTube views.
+                  </div>
+                )}
+              </div>
+              <div className="card">
+                <div className="card-label">Awards won comparison</div>
+                {comparisonArtists.length > 0 ? (
+                  <ComparisonAwardsChart artists={artists} selectedIds={comparisonSelection} />
+                ) : (
+                  <div style={{ padding: '28px', fontSize: '13px', color: 'rgba(255,255,255,0.45)' }}>
+                    Select artists to compare award counts.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="grid-2" style={{ marginBottom: '20px', gap: '20px' }}>
+              <div className="card">
+                <div className="card-label">Active tours comparison</div>
+                {comparisonArtists.length > 0 ? (
+                  <ComparisonToursChart artists={artists} selectedIds={comparisonSelection} />
+                ) : (
+                  <div style={{ padding: '28px', fontSize: '13px', color: 'rgba(255,255,255,0.45)' }}>
+                    Select artists to compare active tours.
+                  </div>
+                )}
+              </div>
+              <div className="card">
+                <div className="card-label">Rank comparison</div>
+                {comparisonArtists.length > 0 ? (
+                  <ComparisonRankChart artists={artists} selectedIds={comparisonSelection} />
+                ) : (
+                  <div style={{ padding: '28px', fontSize: '13px', color: 'rgba(255,255,255,0.45)' }}>
+                    Select artists to compare rank.
+                  </div>
+                )}
+              </div>
+            </div>
+
+          </div>
+        )}
+
+        {activeSection === 'comparison' && !selectedArtist && (
+          <div style={{ padding: '28px', color: 'rgba(255,255,255,0.5)', fontSize: '13px' }}>
+            Select an artist from the roster to view the comparison dashboards.
           </div>
         )}
 
