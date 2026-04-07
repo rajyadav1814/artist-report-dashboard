@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background -->
+  <rect width="64" height="64" rx="14" fill="#0a0a0f"/>
+  <!-- Music note -->
+  <path d="M40 14v22.5" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M40 14l-16 4v22.5" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="24" cy="40.5" r="5" fill="#a78bfa"/>
+  <circle cx="40" cy="36.5" r="5" fill="#7c3aed"/>
+</svg>
