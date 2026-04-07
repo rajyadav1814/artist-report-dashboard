@@ -196,7 +196,7 @@ function App() {
               display: 'block', width: '100%', textAlign: 'left',
               background: activeSection === s.id ? 'rgba(255,255,255,0.07)' : 'none',
               border: 'none', cursor: 'pointer', padding: '10px 12px', borderRadius: '8px',
-              fontSize: '12px', color: activeSection === s.id ? '#fff' : 'rgba(255,255,255,0.45)',
+              fontSize: '14px', color: activeSection === s.id ? '#fff' : 'rgba(255,255,255,0.45)',
               marginBottom: '2px', transition: 'all 0.15s',
             }}>{s.label}</button>
           ))}
