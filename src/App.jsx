@@ -103,7 +103,7 @@ function App() {
         setArtists(sorted);
         setRosterStats(computeRosterStats(transformed));
         setSelectedArtist(transformed[0] || null);
-        setComparisonSelection(transformed[0] ? [transformed[0].id] : []);
+        setComparisonSelection(sorted[0] ? [sorted[0].id] : []);
         setLoading(false);
       })
       .catch(err => {
@@ -424,8 +424,8 @@ function App() {
           <div>
             <div className="page-header">
               <div>
-                <h1>Artist comparison insights</h1>
-                <p>Compare {selectedArtist.name}'s performance against the roster with focused listener trends and selective metrics.</p>
+                <h1>Artist Comparison Insights</h1>
+                <p>Performance against the Artists with focused listener trends and selective metrics.</p>
               </div>
             </div>
 
