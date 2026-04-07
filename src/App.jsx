@@ -172,7 +172,7 @@ function App() {
         </div>
 
         <nav style={{ padding: '0 12px', marginBottom: '20px' }}>
-          {[{ id: 'roster', label: '⊞  Roster Overview' }, { id: 'artist', label: '◎  Artist Detail' }].map(s => (
+          {[{ id: 'roster', label: '⊞  Artist Overview' }, { id: 'artist', label: '◎  Artist Detail' }].map(s => (
             <button key={s.id} onClick={() => setActiveSection(s.id)} style={{
               display: 'block', width: '100%', textAlign: 'left',
               background: activeSection === s.id ? 'rgba(255,255,255,0.07)' : 'none',

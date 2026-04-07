@@ -125,7 +125,7 @@ export default function ChatBot() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([
-    { from: 'bot', text: "Hi — I'm the roster bot. Ask me about any artist" },
+    { from: 'bot', text: "Hi — I'm the Artist Bot. Ask me about any artist" },
   ]);
   const messagesRef = useRef(null);
 
@@ -144,7 +144,7 @@ export default function ChatBot() {
   return (
     <div className="chatbot-root">
       {!open && (
-        <button className="chatbot-toggle" aria-label="Open roster bot" onClick={() => setOpen(true)}>
+        <button className="chatbot-toggle" aria-label="Open Artist Bot" onClick={() => setOpen(true)}>
           <span className="chatbot-icon">🤖</span>
         </button>
       )}
@@ -154,7 +154,7 @@ export default function ChatBot() {
           <div className="chatbot-header">
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <div className="chatbot-icon header">🤖</div>
-              <div style={{ fontWeight: 700 }}>Roster Bot</div>
+              <div style={{ fontWeight: 700 }}>Artist Bot</div>
             </div>
             <button className="chatbot-circle-close" onClick={() => setOpen(false)} aria-label="Close">✕</button>
           </div>
