@@ -82,6 +82,7 @@ function App() {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showAllArtists, setShowAllArtists] = useState(false);
   const scrollContainerRef = React.useRef(null);
 
   useEffect(() => {
@@ -143,6 +144,7 @@ function App() {
   }, [artists]);
 
   const filteredArtists = artists.filter(a => a.name.toLowerCase().includes(searchQuery.toLowerCase()));
+  const displayedArtists = showAllArtists ? filteredArtists : filteredArtists.slice(0, 10);
   const allAwards = artists.flatMap(a => a.awards.map(aw => ({ ...aw, artist: a }))).slice(0, 8);
   const allTours = artists
     .flatMap(a => a.tours.filter(t => t.status === 'announced').map(t => ({ ...t, artist: a })))
@@ -222,11 +224,11 @@ function App() {
             <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.92)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               Artists
             </div>
-            <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.3)' }}>{filteredArtists.length} / {artists.length}</div>
+            <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.3)' }}>{showAllArtists ? artists.length : displayedArtists.length} / {artists.length}</div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {filteredArtists.length === 0 && <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', padding: '8px 12px' }}>No artists found</div>}
-            {filteredArtists.map(a => (
+            {displayedArtists.length === 0 && <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', padding: '8px 12px' }}>No artists found</div>}
+            {displayedArtists.map(a => (
               <button key={a.id} onClick={() => { setSelectedArtist(a); setActiveSection('artist'); }} style={{
                 display: 'flex', alignItems: 'center', gap: '10px',
                 background: selectedArtist?.id === a.id && activeSection === 'artist' ? `${a.color}18` : 'none',
@@ -256,6 +258,19 @@ function App() {
               </button>
             ))}
           </div>
+          {filteredArtists.length > 10 && (
+            <div style={{ padding: '8px 12px' }}>
+              <button onClick={() => setShowAllArtists(!showAllArtists)} style={{
+                background: 'none',
+                border: 'none',
+                color: '#4F8EF7',
+                cursor: 'pointer',
+                fontSize: '11px',
+              }}>
+                {showAllArtists ? 'Show Top 10' : `View All (${filteredArtists.length})`}
+              </button>
+            </div>
+          )}
         </div>
 
       </aside>
