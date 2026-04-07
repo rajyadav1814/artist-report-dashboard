@@ -166,7 +166,7 @@ function App() {
       {/* Sidebar */}
       <aside className="sidebar">
         <div style={{ padding: '28px 20px 20px' }}>
-          <div style={{ fontSize: '20px', color: '#fff', fontFamily: "'DM Serif Display', serif", lineHeight: 1.2 }}>
+          <div style={{ fontSize: '19px', color: '#fff', fontFamily: "'DM Serif Display', serif", lineHeight: 1.0 }}>
             Artist 360° intelligence
           </div>
         </div>
