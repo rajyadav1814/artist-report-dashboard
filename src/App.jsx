@@ -281,8 +281,8 @@ function App() {
           <div>
             <div className="page-header">
               <div>
-                 <h1>Artists 360° intelligence Overview</h1>
-                <p>The Artists 360° Intelligence Overview dashboard highlights {rosterStats.totalArtists} active artists with key metrics like monthly listeners, YouTube views, awards, and tours. It compares artist performance, showcases genre distribution, and tracks streaming milestones. Overall, it provides a clear, data-driven view of audience reach, popularity trends, and music industry impact.</p>
+                 <h1>Artists 360° Intelligence Overview</h1>
+                <p style={{ textAlign: 'justify', width: '60%' }}>The Artists 360° Intelligence Overview dashboard highlights {rosterStats.totalArtists} active artists with key metrics like monthly listeners, YouTube views, awards, and tours. It compares artist performance, showcases genre distribution, and tracks streaming milestones. Overall, it provides a clear, data-driven view of audience reach, popularity trends, and music industry impact.</p>
               </div>
               <div style={{
                 fontSize: '11px', padding: '5px 14px', borderRadius: '20px',
