@@ -151,8 +151,8 @@ function App() {
     .sort((a, b) => new Date(a.date) - new Date(b.date))
     .slice(0, 8);
 
-  const selectedArtistAwards = selectedArtist?.awards.filter(a => a.status === 'won' || a.status === 'honored').length || 0;
-  const selectedArtistTours = selectedArtist?.tours.filter(t => t.status === 'announced').length || 0;
+  // const selectedArtistAwards = selectedArtist?.awards.filter(a => a.status === 'won' || a.status === 'honored').length || 0;
+  // const selectedArtistTours = selectedArtist?.tours.filter(t => t.status === 'announced').length || 0;
   const comparisonArtists = artists.filter(a => comparisonSelection.includes(a.id));
 
   const toggleComparisonArtist = (artistId) => {
