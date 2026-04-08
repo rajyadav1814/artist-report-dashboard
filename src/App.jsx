@@ -430,11 +430,11 @@ function App() {
             </div>
 
             <div className="grid-2" style={{ marginBottom: '20px' }}>
-              <div className="card">
+              <div className="card" style={{ overflow: 'visible' }}>
                 <div className="card-label">Selected artists for comparison</div>
-                <div style={{ maxHeight: '360px', overflowY: 'auto', paddingRight: '4px' }}>
+                <div style={{ maxHeight: '360px', overflowY: 'auto', paddingRight: '16px' }}>
                   {artists.map(a => (
-                    <label key={a.id} style={{
+                    <div key={a.id} onClick={() => toggleComparisonArtist(a.id)} style={{
                       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                       gap: '12px', padding: '10px 12px', borderRadius: '12px', marginBottom: '8px',
                       background: comparisonSelection.includes(a.id) ? 'rgba(46,196,160,0.1)' : 'rgba(255,255,255,0.03)',
@@ -446,7 +446,8 @@ function App() {
                           type="checkbox"
                           checked={comparisonSelection.includes(a.id)}
                           onChange={() => toggleComparisonArtist(a.id)}
-                          style={{ width: '16px', height: '16px' }}
+                          onClick={e => e.stopPropagation()}
+                          style={{ width: '16px', height: '16px', cursor: 'pointer' }}
                         />
                         <div>
                           <div style={{ fontSize: '12px', color: '#fff' }}>{a.name}</div>
@@ -456,7 +457,7 @@ function App() {
                       <div style={{ fontSize: '10px', color: comparisonSelection.includes(a.id) ? a.color : 'rgba(255,255,255,0.35)' }}>
                         {a.country}
                       </div>
-                    </label>
+                    </div>
                   ))}
                 </div>
               </div>
